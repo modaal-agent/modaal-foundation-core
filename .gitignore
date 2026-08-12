@@ -1,0 +1,9 @@
+.DS_Store
+/.build
+/.swiftpm
+/Packages
+xcuserdata/
+DerivedData/
+# A library does not pin its dependency graph — the consuming project's
+# Package.resolved is the one that decides.
+Package.resolved

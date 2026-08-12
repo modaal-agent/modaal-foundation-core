@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ios:
+    name: iOS — every suite
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Test
+        # The same script contributors run locally, so a green CI and a green
+        # checkout mean the same thing. It picks the newest installed iOS
+        # runtime's first available iPhone by UDID rather than naming a device,
+        # because the runner image's device set changes between releases.
+        run: Scripts/test.sh
+
+  watchos:
+    name: watchOS — the watch-consumable products build
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v7
+
+      # README advertises exactly these two products as watch-consumable. The
+      # package-level watchOS floor does not check that claim — three of the six
+      # products import UIKit and could never satisfy it — so this job is what
+      # makes it fail visibly if someone adds a UIKit import to either module.
+      #
+      # Building the product schemes, not the package scheme: the test targets
+      # depend on Quick and Nimble, which are not part of the claim.
+      - name: Build ModaalSupport and ModaalCombine for watchOS
+        run: |
+          set -euo pipefail
+          for scheme in ModaalSupport ModaalCombine; do
+            xcodebuild build \
+              -scheme "$scheme" \
+              -destination 'generic/platform=watchOS Simulator'
+          done
