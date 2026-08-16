@@ -107,6 +107,34 @@ lookup rather than failing to compile. The same is true of an asset key handed
 to the wrong family: `Assetable`'s bridge force-casts, so passing a
 `ColorAsset` where the theme declared a different `_ColorAsset` traps.
 
+An app that reads the theme through the SwiftUI environment (next section)
+also registers its default theme, beside the `Themeable` conformance and
+under the same contract class — a declaration the engine resolves by cast:
+
+```swift
+extension ThemeDefaults: ThemeDefaulting {
+  public func defaultTheme() -> Theme { .default }
+}
+```
+
+## The SwiftUI environment
+
+A view reads `@Environment(\.theme)` and calls `theme.color(.token)`; no view
+takes a theming parameter and no view model carries one. A SwiftUI
+environment value does not cross a UIKit boundary, so the provider is
+published once per SwiftUI tree, at the hosting root: subclass
+`ThemedHostingController` and hand it the provider, or wrap a single tree in
+`ThemeScope(provider) { ... }`. Assign hosted content through
+`themedRootView` — plain `rootView` assignment is a compile error by design.
+
+Trees nobody published to — Xcode previews, most test hosts — resolve the
+environment's default, which is a `ThemeProvider` over the persisted choice
+falling back to the registered `ThemeDefaulting` conformance above. The
+module names no concrete theme; previews render the app's own default
+palette because the conformance is linked into the binary, with no startup
+code involved. A test target that renders unhosted trees declares its own
+test-local conformance.
+
 ## Reading assets
 
 ```swift

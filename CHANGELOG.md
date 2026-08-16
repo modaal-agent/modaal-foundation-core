@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.1] — 2026-08-17
+
+Source-compatible additions; every `0.1.x` pin picks this up on its next
+resolve.
+
+### Added
+
+- **`ModaalTheming`** — the SwiftUI environment layer: `EnvironmentValues.theme`,
+  `ThemeScope`, `ThemedHostingController` (with the `ThemedRootView`
+  construction guard), and the conformance-registered default — a
+  `ThemeDefaulting` protocol with the `ThemeDefaults` registration point the
+  app conforms retroactively, so previews and unhosted trees resolve the app's
+  own default theme without this package naming one.
+
 ## [0.1.0] — 2026-08-12
 
 First public release. Six products, previously six separate in-tree packages

@@ -65,10 +65,13 @@ optionals), `flatten()`, `dictionary()` for a sequence of key-value pairs, and
 **`ModaalTheming`** — a theme engine for UIKit and SwiftUI: a `Theme` value, an
 `Assetable` catalog protocol whose four asset families (color, font, image,
 gradient) each resolve through a light/dark `Appearance`, a `ThemeProvider` that
-resolves an asset for the current theme and preferred appearance, and
-`ThemePersistentStorage` for remembering the choice. Your app supplies the
-catalog; this package supplies the resolution and the persistence. It has no
-package dependencies, deliberately — see
+resolves an asset for the current theme and preferred appearance,
+`ThemePersistentStorage` for remembering the choice, and the SwiftUI
+environment layer — `@Environment(\.theme)`, `ThemeScope`,
+`ThemedHostingController`, with the default theme registered by a
+`ThemeDefaulting` conformance. Your app supplies the catalog and the default
+registration; this package supplies the resolution, the publication and the
+persistence. It has no package dependencies, deliberately — see
 [docs/ModaalTheming.md](docs/ModaalTheming.md).
 
 **`ModaalDiagnostics`** — one logging seam: `Diagnostics` (log, exception,
