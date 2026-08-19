@@ -104,6 +104,15 @@ Two things that have cost time before:
   declared** on the test target. Inheriting it through another target's
   dependency happens to work and is not something to rely on.
 
+One standing rule for new tests:
+
+- **Test doubles never live in a product's `Sources/`, `#if DEBUG`
+  included.** A DEBUG gate keeps a double out of release binaries, not out of
+  the module's API surface or its compile graph. A double one test target
+  uses lives in that test target; a double shared across targets or with
+  consumers ships in a dedicated test-support library product that only test
+  targets link.
+
 ## 7. Releases
 
 - Bare semver tags — `0.1.0`, not `v0.1.0`.
